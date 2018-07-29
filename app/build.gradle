@@ -1,8 +1,12 @@
 apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def spotify_client_id = properties.getProperty('spotify.clientId')
+def spotify_client_secret = properties.getProperty('spotify.clientSecret')
 
 android {
     compileSdkVersion 28
@@ -15,6 +19,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "RADIO_STREAMING_URL", "\"http://192.111.140.6:8224/stream2\""
+        buildConfigField "String", "SPOTIFY_API_BASE_URL", "\"https://api.spotify.com/\""
+        buildConfigField "String", "SPOTIFY_API_CLIENT_ID", "\"$spotify_client_id\""
+        buildConfigField "String", "SPOTIFY_API_CLIENT_SECRET", "\"$spotify_client_secret\""
     }
     buildTypes {
         release {
@@ -22,11 +29,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
@@ -35,8 +45,25 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.2'
     implementation 'saschpe.android:exoplayer2-ext-icy:1.0.1'
     implementation 'androidx.core:core-ktx:1.0.0-beta01'
-    implementation 'com.spotify.android:auth:1.0.0-alpha'
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    implementation 'com.squareup.moshi:moshi:1.6.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.17'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    // If you want to use the GPU Filters
+    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    kapt 'com.github.bumptech.glide:compiler:4.7.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+}
+
+androidExtensions {
+    experimental = true
 }
