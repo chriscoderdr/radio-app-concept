@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Radio App Concept</string>
     <string name="action_player">Player</string>
+    <string name="font_family_light">sans-serif-light</string>
 </resources>

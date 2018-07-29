@@ -7,57 +7,122 @@
     android:layout_height="match_parent"
     tools:context=".ui.start.StartFragment">
 
-    <TextView
-        android:id="@+id/songTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/songArtistTextView"
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/songArtistTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/play"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
 
     <ImageView
-        android:id="@+id/play"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_play_circle_filled_black_100dp"
-        android:tint="@color/colorAccent"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        android:id="@+id/artistImageView"
+        android:layout_width="@dimen/image_large_width"
+        android:layout_height="@dimen/image_large_height"
+        android:layout_marginTop="@dimen/space_larger"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_album"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/stop"
+        android:layout_width="@dimen/image_medium_width"
+        android:layout_height="@dimen/image_medium_height"
+        android:layout_marginEnd="@dimen/image_medium_width"
+        android:layout_marginRight="@dimen/image_medium_width"
+        android:src="@drawable/ic_stop"
+        app:layout_constraintBottom_toBottomOf="@id/pause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/pause"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_pause_circle_filled_black_100dp"
-        android:tint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        android:layout_width="@dimen/image_button_width"
+        android:layout_height="@dimen/image_button_height"
+        android:layout_marginLeft="@dimen/image_button_width"
+        android:layout_marginStart="@dimen/image_button_width"
+        android:layout_marginTop="@dimen/space_normal"
+        android:src="@drawable/ic_pause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artistImageView" />
+
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="@dimen/image_button_width"
+        android:layout_height="@dimen/image_button_height"
+        android:src="@drawable/ic_play"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/stop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:layout_width="@dimen/image_normal_width"
+        android:layout_height="@dimen/image_normal_height"
+        android:layout_marginLeft="@dimen/space_normal"
+        android:layout_marginStart="@dimen/space_normal"
+        android:src="@drawable/ic_vol_min"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/volume" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <ImageView
+        android:layout_width="@dimen/image_normal_width"
+        android:layout_height="@dimen/image_normal_height"
+        android:layout_marginEnd="@dimen/space_normal"
+        android:layout_marginRight="@dimen/space_normal"
+        android:src="@drawable/ic_vol_max"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/volume" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/volume"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="@dimen/image_normal_height"
+        android:layout_marginLeft="@dimen/space_large"
+        android:layout_marginRight="@dimen/space_large"
+        android:layout_marginTop="14dp"
+        android:max="100"
+        android:progressBackgroundTint="@color/progressBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_menu" />
+        app:layout_constraintTop_toBottomOf="@id/stop"
 
+        />
+
+    <TextView
+        android:id="@+id/songTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_normal"
+        android:paddingStart="@dimen/space_normal"
+        android:paddingEnd="@dimen/space_normal"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_big"
+        app:fontFamily="@string/font_family_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/volume"
+        tools:text="In Case You Didn't Know" />
+
+    <TextView
+        android:id="@+id/songArtistTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_normal"
+        android:paddingStart="@dimen/space_normal"
+        android:paddingEnd="@dimen/space_normal"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/songTitleTextView"
+        tools:text="Brett Young" />
 </androidx.constraintlayout.widget.ConstraintLayout>

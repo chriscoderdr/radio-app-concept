@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_large_width">250dp</dimen>
+    <dimen name="image_large_height">250dp</dimen>
+    <dimen name="space_larger">56dp</dimen>
+    <dimen name="image_medium_width">46dp</dimen>
+    <dimen name="image_medium_height">46dp</dimen>
+    <dimen name="space_normal">14dp</dimen>
+    <dimen name="text_big">22sp</dimen>
+    <dimen name="text_medium">18sp</dimen>
+    <dimen name="image_normal_width">24dp</dimen>
+    <dimen name="image_normal_height">24dp</dimen>
+    <dimen name="space_large">46dp</dimen>
+    <dimen name="image_button_width">46dp</dimen>
+    <dimen name="image_button_height">46dp</dimen>
+</resources>
