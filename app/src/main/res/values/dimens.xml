@@ -13,4 +13,6 @@
     <dimen name="space_large">46dp</dimen>
     <dimen name="image_button_width">46dp</dimen>
     <dimen name="image_button_height">46dp</dimen>
+    <dimen name="bottom_view_height">56dp</dimen>
+    <dimen name="space_medium">8dp</dimen>
 </resources>

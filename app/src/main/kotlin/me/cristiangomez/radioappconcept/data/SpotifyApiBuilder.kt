@@ -7,9 +7,7 @@ import me.cristiangomez.radioappconcept.data.pojo.spotify.TokenResponse
 import me.cristiangomez.radioappconcept.util.PreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
 
@@ -26,9 +24,12 @@ class SpotifyApiBuilder {
                             val preferencesManager = PreferencesManager(context)
                             val savedToken = preferencesManager.getSpotifyAuthToken()
                             var token: TokenResponse? = savedToken
-                            if (savedToken == null || Date().time >= (Date().time + savedToken.expiresIn!! + 500)) {
+                            if (savedToken == null || Date().time >= (savedToken.createdAt + savedToken.expiresIn!! + 500)) {
                                 token = spotifyAuthApi.authenticate()
-                                        .blockingFirst()
+                                        .execute()?.body()
+                                if (token != null) {
+                                    preferencesManager.setSpotifyAuthToken(token)
+                                }
                             }
                             val request = chain.request().newBuilder()
                                     .addHeader("Authorization",
@@ -43,7 +44,6 @@ class SpotifyApiBuilder {
                     .baseUrl(BuildConfig.SPOTIFY_API_BASE_URL)
                     .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
                             .build()))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
             return retrofit.create(SpotifyApi::class.java)
         }
@@ -56,7 +56,6 @@ class SpotifyApiBuilder {
                     .baseUrl(BuildConfig.SPOTIFY_API_BASE_URL)
                     .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
                             .build()))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
             return retrofit.create(SpotifyAuthApi::class.java)
         }

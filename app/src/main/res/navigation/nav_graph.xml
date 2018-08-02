@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/playerFragment">
+
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="me.cristiangomez.radioappconcept.ui.player.PlayerFragment"
+        android:label="player_fragment"
+        tools:layout="@layout/start_fragment"></fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="me.cristiangomez.radioappconcept.ui.chat.ChatFragment"
+        android:label="chat_fragment"
+        tools:layout="@layout/chat_fragment"></fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="me.cristiangomez.radioappconcept.ui.userprofile.UserProfileFragment"
+        android:label="user_profile_fragment"
+        tools:layout="@layout/user_profile_fragment" ></fragment>
+    <activity
+        android:id="@+id/authActivity"
+        android:name="me.cristiangomez.radioappconcept.ui.AuthActivity"
+        android:label="activity_auth"
+        tools:layout="@layout/activity_auth" />
+</navigation>

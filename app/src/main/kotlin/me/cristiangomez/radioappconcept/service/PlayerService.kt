@@ -3,11 +3,16 @@ package me.cristiangomez.radioappconcept.service
 import android.app.IntentService
 import android.app.Notification
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.Bitmap
-import androidx.core.net.toUri
+import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.net.Uri
+import android.os.Build
+import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -18,9 +23,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import me.cristiangomez.radioappconcept.BuildConfig
-import me.cristiangomez.radioappconcept.StartActivity
 import me.cristiangomez.radioappconcept.receiver.PlayerBroadcastReceiver
 import me.cristiangomez.radioappconcept.receiver.PlayerMetadataBroadcastReceiver
+import me.cristiangomez.radioappconcept.ui.StartActivity
 import me.cristiangomez.radioappconcept.util.PreferencesManager
 import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
@@ -31,12 +36,55 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
     private var playerNotificationManager: PlayerNotificationManager? = null
     private var preferencesManager: PreferencesManager? = null
     private var onSharedPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener? = null
+    private lateinit var audioManager: AudioManager
+    private lateinit var audioFocusRequest: AudioFocusRequest
+    private val onAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener {
+        when (it) {
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
+                player?.playWhenReady = false
+            AudioManager.AUDIOFOCUS_LOSS ->
+                    clearPlayer()
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
+                    player?.volume = 0.02f
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                player?.playWhenReady = true
+                player?.volume = preferencesManager!!.getVolume()
+            }
+        }
+    }
+
+    private fun requestAudioFocus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioManager.requestAudioFocus(audioFocusRequest)
+        } else {
+            audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN)
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        val notification = NotificationCompat.Builder(this, "")
+                .build()
+        startForeground(1, notification)
+        audioManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getSystemService(AudioManager::class.java)
+        } else {
+            getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(onAudioFocusChangeListener)
+                    .setWillPauseWhenDucked(true)
+                    .build()
+        }
+    }
 
     override fun onHandleIntent(intent: Intent?) {
+        requestAudioFocus()
         preferencesManager = PreferencesManager(this)
         player = ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector())
-        val uri = BuildConfig.RADIO_STREAMING_URL.toUri()
-
+        val uri = Uri.parse(BuildConfig.RADIO_STREAMING_URL)
 
         playerNotificationManager = PlayerNotificationManager(this,
                 PLAYER_NOTIFICATION_CHANNEL_ID, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
@@ -149,7 +197,7 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
             }
 
             override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-                startForeground(notificationId, notification)
+                startForeground(1, notification)
             }
         })
         onSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
@@ -170,6 +218,11 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
 
     private fun clearPlayer() {
         player?.release()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest)
+        } else {
+            audioManager.abandonAudioFocus(onAudioFocusChangeListener)
+        }
         playerNotificationManager?.setPlayer(null)
         isRunning = false
         preferencesManager?.setIsPlaying(false)
