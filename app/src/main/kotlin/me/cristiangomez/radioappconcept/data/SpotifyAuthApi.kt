@@ -1,9 +1,9 @@
 package me.cristiangomez.radioappconcept.data
 
 import android.util.Base64
-import io.reactivex.Observable
 import me.cristiangomez.radioappconcept.BuildConfig
 import me.cristiangomez.radioappconcept.data.pojo.spotify.TokenResponse
+import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
@@ -16,5 +16,5 @@ interface SpotifyAuthApi {
                      @Header("Authorization") authorization: String
                      = "Basic " + Base64.encodeToString((BuildConfig.SPOTIFY_API_CLIENT_ID + ":" +
                              BuildConfig.SPOTIFY_API_CLIENT_SECRET).toByteArray(), Base64.NO_WRAP)):
-            Observable<TokenResponse>
+            Call<TokenResponse>
 }

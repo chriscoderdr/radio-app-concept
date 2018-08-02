@@ -2,7 +2,6 @@ package me.cristiangomez.radioappconcept.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import com.squareup.moshi.Moshi
 import me.cristiangomez.radioappconcept.R
 import me.cristiangomez.radioappconcept.data.pojo.spotify.TokenResponse
@@ -18,15 +17,13 @@ class PreferencesManager(context: Context) {
     }
 
     fun setIsPlaying(isPlaying: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(PREFERENCE_IS_PLAYING, isPlaying)
-        }
+        sharedPreferences.edit().putBoolean(PREFERENCE_IS_PLAYING, isPlaying)
+                .apply()
     }
 
     fun setVolume(volume: Float) {
-        sharedPreferences.edit {
-            putFloat(PREFERENCE_VOLUME, volume)
-        }
+        sharedPreferences.edit().putFloat(PREFERENCE_VOLUME, volume)
+                .apply()
     }
 
     fun getVolume(): Float {
@@ -34,11 +31,10 @@ class PreferencesManager(context: Context) {
     }
 
     fun setSpotifyAuthToken(token: TokenResponse) {
-        sharedPreferences.edit {
-            putString(PREFERENCE_SPOTIFY_API_AUTH_TOKEN,
-                    Moshi.Builder().build().adapter<TokenResponse>(TokenResponse::class.java)
-                            .toJson(token))
-        }
+        sharedPreferences.edit().putString(PREFERENCE_SPOTIFY_API_AUTH_TOKEN,
+                Moshi.Builder().build().adapter<TokenResponse>(TokenResponse::class.java)
+                        .toJson(token))
+                .apply()
     }
 
     fun getSpotifyAuthToken(): TokenResponse? {
@@ -53,9 +49,9 @@ class PreferencesManager(context: Context) {
 
     fun setMetaData(metaData: String?) {
         sharedPreferences
-                .edit {
-                    putString(PREFERENCE_META_DATA, metaData)
-                }
+                .edit()
+                .putString(PREFERENCE_META_DATA, metaData)
+                .apply()
     }
 
     fun getMetadata(): String {

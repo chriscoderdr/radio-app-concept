@@ -1,32 +1,61 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.getkeepsafe.dexcount'
+
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def spotify_client_id = properties.getProperty('spotify.clientId')
 def spotify_client_secret = properties.getProperty('spotify.clientSecret')
+def nav_version = "1.0.0-alpha04"
+
 
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.1"
     defaultConfig {
         applicationId "me.cristiangomez.radioappconcept"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "RADIO_STREAMING_URL", "\"http://192.111.140.6:8224/stream2\""
+        buildConfigField "String", "RADIO_STREAMING_URL", "\"http://streaming312.radionomy.com:80/RadioHunter-TheHitzChannel\""
         buildConfigField "String", "SPOTIFY_API_BASE_URL", "\"https://api.spotify.com/\""
         buildConfigField "String", "SPOTIFY_API_CLIENT_ID", "\"$spotify_client_id\""
         buildConfigField "String", "SPOTIFY_API_CLIENT_SECRET", "\"$spotify_client_secret\""
+        resConfigs "en"
+    }
+    signingConfigs {
+        release {
+            if (project.hasProperty('RADIO_APP_CONCEPT_RELEASE_STORE_FILE')) {
+                storeFile file(RADIO_APP_CONCEPT_RELEASE_STORE_FILE)
+                storePassword RADIO_APP_CONCEPT_RELEASE_STORE_PASSWORD
+                keyAlias RADIO_APP_CONCEPT_RELEASE_KEY_ALIAS
+                keyPassword RADIO_APP_CONCEPT_RELEASE_KEY_PASSWORD
+            }
+
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
     buildTypes {
-        release {
-            minifyEnabled false
+        debug {
+            minifyEnabled true
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     sourceSets {
@@ -36,33 +65,35 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'com.google.android.material:material:1.0.0-beta01'
+    implementation "com.google.android.material:material:1.0.0-beta01"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.2'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.2'
+    implementation "com.google.android.exoplayer:exoplayer-core:2.8.2"
+    implementation "com.google.android.exoplayer:exoplayer-ui:2.8.2"
     implementation 'saschpe.android:exoplayer2-ext-icy:1.0.1'
-    implementation 'androidx.core:core-ktx:1.0.0-beta01'
-    implementation 'jp.wasabeef:glide-transformations:3.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     implementation 'com.squareup.moshi:moshi:1.6.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.17'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
-
-    // If you want to use the GPU Filters
-    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    kapt 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation "com.google.firebase:firebase-core:16.0.1"
+    implementation "com.google.firebase:firebase-auth:16.0.2"
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    implementation "com.google.firebase:firebase-firestore:17.0.4"
+//    implementation 'com.google.firebase:firebase-perf:16.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
+    implementation 'com.facebook.android:facebook-login:[4,5)'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
 }
+
 
 androidExtensions {
     experimental = true

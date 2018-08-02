@@ -2,9 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_player"
+        android:id="@+id/playerFragment"
         android:icon="@drawable/ic_radio_black_24dp"
         android:title="@string/action_player"
-        app:iconTint="@color/colorAccent"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/chatFragment"
+        android:icon="@drawable/ic_chat_black_24dp"
+        android:title="@string/action_chat"
+        app:showAsAction="ifRoom"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/userProfileFragment"
+        android:title="@string/action_account"
+        android:icon="@drawable/ic_chat_black_24dp"
+        app:showAsAction="ifRoom"
+        android:checkable="true"
+        />
 </menu>

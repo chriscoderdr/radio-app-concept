@@ -2,4 +2,38 @@
     <string name="app_name">Radio App Concept</string>
     <string name="action_player">Player</string>
     <string name="font_family_light">sans-serif-light</string>
+    <string name="chat_hint">Say something</string>
+    <string name="action_chat">Chat</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_email">Email</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="dont_have_account">Don\'t have an account? create</string>
+    <string name="sign_in_header_text">Sign in</string>
+    <string name="sign_in_with_facebook">Sign in with facebook</string>
+    <string name="sign_in_or">Or</string>
+    <string name="error_email_blank">Email can\'t be empty</string>
+    <string name="error_password_blank">Password can\'t be empty</string>
+    <string name="error_email_invalid">Email is not in a valid format. Ex: example@example.org.</string>
+    <string name="error_invalid_credentials">Invalid credentials</string>
+
+    <string name="facebook_app_id" translatable="false">266686373926493</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb266686373926493</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="action_account">My account</string>
+    <string name="logout">Log out</string>
+    <string name="title_activity_auth">AuthActivity</string>
+    <string name="already_have_account">Already have an account? Sign In</string>
+    <string name="sign_up_header_text">Sign up</string>
+    <string name="hint_display_name">Display name</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="error_password_length">Password must have at least 6 characters</string>
+    <string name="error_display_name_blank">Display name can\'t be empty</string>
+    <string name="error_email_user_collision">Email already in use</string>
+    <string name="error_required">Can\'t be blank</string>
+    <string name="error_min_length">Must be at least %1$d</string>
+    <string name="error_max_length">Must be least than %1$d</string>
+    <string name="sign_up_generic_error">Error trying to sign up, please try again</string>
+    <string name="sign_up_network_error">There was a network error trying to sign up please, try again.</string>
+    <string name="sign_in_network_error">There was a network error trying to sign in</string>
+    <string name="sign_in_generic_error">We\'re sorry there was a problem trying to sign in try again later</string>
 </resources>
