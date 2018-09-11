@@ -1,8 +1,8 @@
 package me.cristiangomez.radioappconcept.service
 
-import android.app.IntentService
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,6 +12,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
+import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -29,7 +30,11 @@ import me.cristiangomez.radioappconcept.ui.StartActivity
 import me.cristiangomez.radioappconcept.util.PreferencesManager
 import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
-class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
+class PlayerService : Service() {
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
     private var currentTitle = ""
     private var isRunning = true
     private var player: SimpleExoPlayer? = null
@@ -75,9 +80,7 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
                     .setWillPauseWhenDucked(true)
                     .build()
         }
-    }
 
-    override fun onHandleIntent(intent: Intent?) {
         requestAudioFocus()
         preferencesManager = PreferencesManager(this)
         player = ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector())
@@ -104,6 +107,16 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
                         return null
                     }
                 })
+        playerNotificationManager?.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
+            override fun onNotificationCancelled(notificationId: Int) {
+                clearPlayer()
+                stopSelf()
+            }
+
+            override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
+                startForeground(notificationId, notification)
+            }
+        })
         playerNotificationManager?.setPlayer(player)
         playerNotificationManager?.setFastForwardIncrementMs(0)
         playerNotificationManager?.setRewindIncrementMs(0)
@@ -188,23 +201,11 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
             clearPlayer()
             stopSelf()
         }), intentFilter)
-        playerNotificationManager?.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
-            override fun onNotificationCancelled(notificationId: Int) {
-                clearPlayer()
-                stopSelf()
-            }
-
-            override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-            }
-        })
         onSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
             player?.volume = preferencesManager!!.getVolume()
         }
         preferencesManager?.sharedPreferences
                 ?.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener)
-        while (isRunning) {
-
-        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -224,6 +225,10 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
         isRunning = false
         preferencesManager?.setIsPlaying(false)
         preferencesManager?.setMetaData(null)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
     }
 
     companion object {
