@@ -92,7 +92,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signInWithFacebookButton"
-            style="@style/Widget.MaterialComponents.Button.IconButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_normal"
@@ -106,7 +106,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signInWithGoogleButton"
-            style="@style/Widget.MaterialComponents.Button.IconButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_normal"

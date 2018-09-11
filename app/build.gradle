@@ -12,12 +12,12 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def spotify_client_id = properties.getProperty('spotify.clientId')
 def spotify_client_secret = properties.getProperty('spotify.clientSecret')
-def nav_version = "1.0.0-alpha04"
+def nav_version = "1.0.0-alpha05"
 
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "28.0.1"
+    buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "me.cristiangomez.radioappconcept"
         minSdkVersion 16
@@ -31,19 +31,6 @@ android {
         buildConfigField "String", "SPOTIFY_API_CLIENT_SECRET", "\"$spotify_client_secret\""
         resConfigs "en"
     }
-    signingConfigs {
-        release {
-            if (project.hasProperty('RADIO_APP_CONCEPT_RELEASE_STORE_FILE')) {
-                storeFile file(RADIO_APP_CONCEPT_RELEASE_STORE_FILE)
-                storePassword RADIO_APP_CONCEPT_RELEASE_STORE_PASSWORD
-                keyAlias RADIO_APP_CONCEPT_RELEASE_KEY_ALIAS
-                keyPassword RADIO_APP_CONCEPT_RELEASE_KEY_PASSWORD
-            }
-
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-    }
     buildTypes {
         debug {
             minifyEnabled true
@@ -55,7 +42,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     sourceSets {
@@ -65,23 +51,23 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation "com.google.android.material:material:1.0.0-beta01"
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc02'
+    implementation 'com.google.android.material:material:1.0.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-rc01'
     implementation "com.google.android.exoplayer:exoplayer-core:2.8.2"
     implementation "com.google.android.exoplayer:exoplayer-ui:2.8.2"
     implementation 'saschpe.android:exoplayer2-ext-icy:1.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     implementation 'com.squareup.moshi:moshi:1.6.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-rc02'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
-    implementation "com.google.firebase:firebase-core:16.0.1"
-    implementation "com.google.firebase:firebase-auth:16.0.2"
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
-    implementation "com.google.firebase:firebase-firestore:17.0.4"
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation "com.google.firebase:firebase-auth:16.0.3"
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation "com.google.firebase:firebase-firestore:17.1.0"
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
 //    implementation 'com.google.firebase:firebase-perf:16.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     testImplementation 'junit:junit:4.12'
@@ -91,8 +77,8 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
     // use -ktx for Kotlin
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
-    implementation 'com.facebook.android:facebook-login:[4,5)'
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation 'com.facebook.android:facebook-login:4.36.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
 }
 
 
