@@ -12,7 +12,6 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
-import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -23,6 +22,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import me.cristiangomez.radioappconcept.BuildConfig
+import me.cristiangomez.radioappconcept.R
 import me.cristiangomez.radioappconcept.receiver.PlayerBroadcastReceiver
 import me.cristiangomez.radioappconcept.receiver.PlayerMetadataBroadcastReceiver
 import me.cristiangomez.radioappconcept.ui.StartActivity
@@ -43,9 +43,9 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
                 player?.playWhenReady = false
             AudioManager.AUDIOFOCUS_LOSS ->
-                    clearPlayer()
+                clearPlayer()
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
-                    player?.volume = 0.02f
+                player?.volume = 0.02f
             AudioManager.AUDIOFOCUS_GAIN -> {
                 player?.playWhenReady = true
                 player?.volume = preferencesManager!!.getVolume()
@@ -64,9 +64,6 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
 
     override fun onCreate() {
         super.onCreate()
-        val notification = NotificationCompat.Builder(this, "")
-                .build()
-        startForeground(1, notification)
         audioManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getSystemService(AudioManager::class.java)
         } else {
@@ -86,26 +83,27 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
         player = ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector())
         val uri = Uri.parse(BuildConfig.RADIO_STREAMING_URL)
 
-        playerNotificationManager = PlayerNotificationManager(this,
-                PLAYER_NOTIFICATION_CHANNEL_ID, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
-            override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                return PendingIntent.getActivity(this@PlayerService, 0,
-                        Intent(this@PlayerService, StartActivity::class.java),
-                        PendingIntent.FLAG_UPDATE_CURRENT)
-            }
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(this,
+                PLAYER_NOTIFICATION_CHANNEL_ID, R.string.app_name, NOTIFICATION_ID,
+                object : PlayerNotificationManager.MediaDescriptionAdapter {
+                    override fun createCurrentContentIntent(player: Player?): PendingIntent? {
+                        return PendingIntent.getActivity(this@PlayerService, 0,
+                                Intent(this@PlayerService, StartActivity::class.java),
+                                PendingIntent.FLAG_UPDATE_CURRENT)
+                    }
 
-            override fun getCurrentContentText(player: Player?): String? {
-                return null
-            }
+                    override fun getCurrentContentText(player: Player?): String? {
+                        return null
+                    }
 
-            override fun getCurrentContentTitle(player: Player?): String {
-                return currentTitle
-            }
+                    override fun getCurrentContentTitle(player: Player?): String {
+                        return currentTitle
+                    }
 
-            override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
-                return null
-            }
-        })
+                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
+                        return null
+                    }
+                })
         playerNotificationManager?.setPlayer(player)
         playerNotificationManager?.setFastForwardIncrementMs(0)
         playerNotificationManager?.setRewindIncrementMs(0)
@@ -197,7 +195,6 @@ class PlayerService : IntentService(PlayerService::class.java.canonicalName) {
             }
 
             override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-                startForeground(1, notification)
             }
         })
         onSharedPreferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
