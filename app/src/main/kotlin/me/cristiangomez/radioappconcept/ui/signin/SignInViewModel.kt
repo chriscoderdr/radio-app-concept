@@ -94,7 +94,7 @@ class SignInViewModel : ViewModel() {
             val accountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = accountTask.getResult(ApiException::class.java)
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                val credential = GoogleAuthProvider.getCredential(account!!.idToken, null)
                 FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnSuccessListener {
                             onSuccessCallback?.invoke()
